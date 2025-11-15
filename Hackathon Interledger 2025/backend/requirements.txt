@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+alembic
+psycopg2-binary
+python-dotenv
+pydantic
+twilio
+phonenumbers
+python-jose[cryptography]
+bcrypt
