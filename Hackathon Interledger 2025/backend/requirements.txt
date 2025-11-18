@@ -9,3 +9,8 @@ twilio
 phonenumbers
 python-jose[cryptography]
 bcrypt
+pytest
+pytest-asyncio
+httpx
+responses
+ruff

@@ -1,13 +1,25 @@
-from sqlalchemy import Column, String, Integer, Float, DateTime, Boolean, JSON, ForeignKey, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 def gen_uuid():
     return str(uuid.uuid4())
+
 
 class User(Base):
     __tablename__ = "users"
@@ -20,6 +32,9 @@ class User(Base):
     verified = Column(Boolean, default=False)
     password = Column(String, nullable=True)
     registration_timestamp = Column(DateTime, default=datetime.utcnow)
+    otp_failed_attempts = Column(Integer, default=0)
+    otp_locked_until = Column(DateTime, nullable=True)
+
 
 class Wallet(Base):
     __tablename__ = "wallets"
@@ -34,6 +49,7 @@ class Wallet(Base):
     account_address = Column(String, nullable=True)
     registration_timestamp = Column(DateTime, default=datetime.utcnow)
 
+
 class Transaction(Base):
     __tablename__ = "transactions"
     id = Column(String, primary_key=True, default=gen_uuid)
@@ -45,6 +61,9 @@ class Transaction(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     status = Column(String, default="pending")
     preferred_method = Column(String, nullable=True)
+    client_tx_id = Column(String, nullable=True, index=True)
+    destination_account = Column(String, nullable=True)
+
 
 class LookupLog(Base):
     __tablename__ = "lookups"
@@ -57,6 +76,7 @@ class LookupLog(Base):
     raw_response = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+
 class VerifyLog(Base):
     __tablename__ = "verify_logs"
     id = Column(String, primary_key=True, default=gen_uuid)
@@ -67,6 +87,7 @@ class VerifyLog(Base):
     status = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     raw_response = Column(JSON)
+
 
 class PendingRequest(Base):
     __tablename__ = "pending_requests"
